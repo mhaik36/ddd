@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="pageheader">
+	<div class="media">
+		<div class="pageicon pull-left" style="padding-top: 5px;"><i class="fa fa-ticket"></i></div>
+		<ul class="breadcrumb">
+			<li><a th:href="@{/Main}"><i class="glyphicon glyphicon-home"></i></a></li>
+		</ul>
+		<h4 lang="lang_Vi" class="text-uppercase" th:text="${_header}"></h4>
+	</div><!-- media -->
+</div><!-- pageheader -->
+
+<div class="contentpanel">
+	<div class="container">
+		<form id="fDMBankCRUD" name="fDMBankCRUD" method="post" enctype="multipart/form-data" >
+			<div class="col-sm-12 text-error" th:if="${null != messageError}">
+				[[${messageError}]]<hr class="m-t-5 m-b-5">
+			</div>
+			<div class="row" >
+				<div class="col-sm-6 margin-top-only margin-bottom-only center-block">
+					<div class="row " th:classappend="${null != messageError? 'none-pointer-event': ''}" >
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label class="col-md-4 col-form-label control-label">Mã ngân hàng</label>
+								<div class="col-md-8">
+									<input type="text" th:value="${bankId}" th:readonly="${null != bankId}" class="form-control" id="bankId" name="bankId" maxlength="12" >
+								</div>
+							</div>
+							
+							
+							<div class="form-group">
+								<div>
+									<label class="control-label">Mã ngân hàng</label>
+								</div>
+								<div class="form-group col-md-6 p-l-0" >
+									<input type="text" th:value="${bankId}" th:readonly="${null != bankId}" class="form-control" id="bankId" name="bankId" maxlength="12" >
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label class="control-label">Tên ngân hàng<span class="text-error">&nbsp;*</span></label>
+								<input type="text" th:value="${bankNameV}" class="form-control" id="bankNameV" name="bankNameV" maxlength="200" >
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label class="control-label">Nhóm ngân hàng<span class="text-error">&nbsp;*</span></label>
+								<select name="generalbank" id="generalbank" class="form-control">
+							 		<option value=""></option>
+                         			<option th:each="entry : ${MAP_LOCATIONS.entrySet()}"
+                         					th:value="${entry.key}" th:utext="${entry.value}"
+                         					th:selected="${generalbank == entry.key}"> </option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label class="control-label">Trạng thái<span class="text-error">&nbsp;*</span></label>
+								<select name="active" id="active" class="form-control">
+							 		<option value=""></option>
+									<option th:each="key: ${MAP_STATUS.keySet()}" 
+											th:value="${key}" 
+											th:text="${MAP_STATUS.get(key)}"
+											th:selected="${key} == ${active}"
+											></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label class="control-label">Tỉnh/Thành phố<span class="text-error">&nbsp;*</span></label>
+								<select name="prCode" id="prCode" class="form-control">
+							 		<option value=""></option>
+                         			<option th:each="entry : ${MAP_PR_CODES.entrySet()}"
+                         					th:value="${entry.key}" th:utext="${entry.value}"
+                         					th:selected="${entry.key} == ${prCode}"
+                         					> </option>
+								</select>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label class="control-label">Kênh thanh toán<span class="text-error">&nbsp;*</span></label>
+								<select name="channel" id="channel" class="form-control">
+							 		<option value=""></option>
+                         			<option th:each="entry : ${MAP_CHANNEL.entrySet()}"
+                         					th:value="${entry.key}" th:utext="${entry.value}"
+                         					th:selected="${entry.key} == ${channel}"
+                         					> </option>
+								</select>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						
+						
+					</div>
+					<div class="clearfix"></div>
+					<hr style="margin: 0 0 10px 0;">
+					<div class="form-row">
+						<div class="col-md-12 mT-15 p-l-0 p-r-0">
+							<button type="button" id="btBack" class="btn btn-sm ladda-button float-left" data-style="slide-left"><i class="fa fa-chevron-left mR-5"></i> Quay lại</button>
+							<button type="button" id="btAccept" class="btn btn-primary btn-sm ladda-button float-right" data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<script th:src="@{/static/function/dm/bankCRUD.js(v=${deployVesionJS}) }"></script>
+		<script type="text/javascript">
+		$(function(){
+			$("#fDMBankCRUD").find('#btAccept').click(function (event) {
+				event.preventDefault();event.stopPropagation();
+				
+				var _obj = this;
+				$(_obj).prop('disabled', true);
+				$.ajax({
+					type: "POST",
+					datatype: "json",
+					url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=checkDataToSave',
+					data: getDataToSave(),
+					beforeSend: function(req) {
+						initAjaxJsonRequest(req);
+			        	showLoading();
+					},
+					success:function(res) {
+						$(_obj).prop('disabled', false);
+						hideLoading();
+						if(res) {
+							if(res.errorCode == 0) {
+								alertConfirm(res.responseData,
+									function(e){
+									$.ajax({
+										type: "POST",
+										datatype: "json",
+										url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=saveData',
+										data: getDataToSave(),
+										beforeSend: function(req) {
+											initAjaxJsonRequest(req);
+								        	showLoading();
+										},
+										success:function(res) {
+											hideLoading();
+											if(res) {
+												if(res.errorCode == 0) {
+													$(_obj).prop('disabled', true);
+													alertDLSuccess(createObjectError(res).html());
+													disabledAllControlsInForm('fDMBankCRUD');
+													
+													$("#fDMBankCRUD").find('#btBack').trigger('click');
+												}else{
+													alertDLSuccess(createObjectError(res).html());
+												}
+											}else{
+												alertDLSuccess('unknown error!!!');
+												hideLoading();
+											}
+										},
+										error:function (xhr, ajaxOptions, thrownError){
+											alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+								            hideLoading();
+								        }
+									});
+									},
+									function(e){}
+									);
+										
+							}else{
+								alertDLSuccess(createObjectError(res).html());
+							}
+						}else{
+							alertDLSuccess('unknown error!!!');
+							hideLoading();
+						}
+					},
+					error:function (xhr, ajaxOptions, thrownError){
+						$(_obj).prop('disabled', false);
+						alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+			            hideLoading();
+			        }
+				});
+			});
+			
+		});
+		</script>
+		
+	</div>
+</div>
+	
+</html>

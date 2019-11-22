@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorator="template/layout/layout-main.html">
+
+<body>
+	<div class="mainpanel" layout:fragment="content">
+		<div class="pageheader">
+			<div class="media">
+				<div class="pageicon pull-left" style="padding-top: 5px;"><i class="fa fa-ticket"></i></div>
+				<ul class="breadcrumb">
+					<li><a th:href="@{/Main}"><i class="glyphicon glyphicon-home"></i></a></li>
+				</ul>
+				<h4 lang="lang_Vi" class="text-uppercase" >Danh mục giờ COT </h4>
+			</div><!-- media -->
+		</div><!-- pageheader -->
+		
+		<div class="contentpanel">
+			<div class="container">
+				<form id="fCutOffTime" name="fCutOffTime" method="post" enctype="multipart/form-data" >
+					<div class="row">
+						<div class="col-xs-12 margin-top-only margin-bottom-only center-block">
+							<div class="row">
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Kênh</label>
+									<div class="col-md-8">
+										<select name="channelId" id="channelId" class="form-control">
+									 		<option value=""></option>
+									 		<th:block th:if="${CHANNEL != null}">
+			                         			<option th:each="entry : ${CHANNEL.entrySet()}"
+			                         					th:value="${entry.key}" th:utext="${entry.value}"
+			                         					th:selected="${entry.key} == ${channel}"
+			                         					> </option>
+		                         			</th:block>
+										</select>
+									</div>
+								</div>
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Giờ COT</label>
+									<div class="col-md-8">
+										<input type="text" class="form-control" id="cutOffTime" name="cutOffTime" maxlength="200">
+									</div>
+								</div>
+
+							</div>
+							<div class="row">
+								
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Trạng thái</label>
+									<div class="col-md-8">
+										<select name="active" id="active" class="form-control">
+									 		<option value=""></option>
+									 		<th:block th:if="${STATUS != null}">
+			                         			<option th:each="entry : ${STATUS.entrySet()}"
+			                         					th:value="${entry.key}" th:utext="${entry.value}"
+			                         					th:selected="${entry.key} == active"
+			                         					> </option>
+		                         			</th:block>
+										</select>
+									</div>
+								</div>
+								<div class="form-group col-md-2">
+				    				<div style="margin: 0px 10px">
+				    					<button type="button" id="btSearch" class="btn btn-primary btn-xs " ><i class="fa fa-search" ></i> Tìm kiếm</button>
+				    				</div>
+								</div>
+
+							</div>
+							<hr style="margin: 0 0 10px 0;">
+							<div class="row">
+								<div class="form-group col-md-12" th:if="false">
+				    				<div class="pull-right" >
+				    					<button type="button" id="btAdd" class="btn btn-sm btn-primary ">Thêm mới</button>
+				    					<button type="button" id="btAdd" class="btn btn-sm btn-primary ">Thay đổi</button>
+				    				</div>
+				    				
+								</div>
+								<div class="col-md-12 form-group btnFunction">
+									<button type="button" data-action="exportExcel" class="btn btn-inline btn-sm btn-primary" id="btnExportExcel"><i class="fa fa-file-excel-o"> </i> Xuất Excel</button>
+									<button type="button" data-action="verify" class="btn btn-inline btn-sm btn-success" id="btnVerify"><i class="fa fa-check"> </i> Duyệt</button>
+									<button type="button" data-action="reject" class="btn btn-inline btn-sm btn-danger" id="btnReject"><i class="fa fa-reply"> </i> Từ chối duyệt</button>
+									<button type="button" data-action="edit" class="btn btn-inline btn-sm btn-primary" id="btnEdit"><em class="fa fa-pencil-square-o"> </em> Thay đổi</button>
+								</div>
+								<div class="clearfix"></div>
+								<hr style="margin: 0 0 10px 0;">
+								<div class="">
+									<div id="grid" ></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form> 
+				<script type="text/javascript">
+					var _gridMain = $('#fCutOffTime').find('#grid');
+				</script>
+				<script th:src="@{/static/function/dm/cutOffTime.js(v=${deployVesionJS}) }"></script>
+			</div>
+		</div>
+	</div>
+</body>
+	
+</html>

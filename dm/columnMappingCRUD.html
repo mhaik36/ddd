@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="modal-header">
+	<h4 class="modal-title text-uppercase fw-700" id="dlg_title" th:text="${_header}"></h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="col-xs-11 margin-top-only margin-bottom-only center-block">
+				<form id="fDMColumnMappingCRUD" name="fDMColumnMappingCRUD" method="post" enctype="multipart/form-data" >
+					<div class="row text-error" th:if="${messageError != null}">
+						[[${messageError}]]<hr class="m-t-5 m-b-5">
+					</div>
+					<div class="row" >
+						<div class="margin-top-only margin-bottom-only center-block">
+							<div class="row " th:classappend="${messageError != null? 'none-pointer-event': ''}" >
+								<div class="clearfix"></div>
+								<div class="col-sm-9">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Cột Excel<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="excelCol" id="excelCol" class="form-control" >
+												<option value=""></option>
+										 		<th:block th:if="${TBLEX != null}">
+				                         			<option th:each="entry : ${TBLEX.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${excelCol}"
+				                         					> </option>
+			                         			</th:block>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-9">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Cột CSDL<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="dataBaseCol" id="dataBaseCol" class="form-control" >
+												<option value=""></option>
+										 		<th:block th:if="${TBLSTAND != null}">
+				                         			<option th:each="entry : ${TBLSTAND.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${dataBaseCol}"
+				                         					> </option>
+			                         			</th:block>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-3 col-form-label control-label"></label>
+										<div class="col-md-4">
+		
+										</div>
+										<div class="col-md-3">
+											<button type="button" class="btn btn-primary btn-xs" id="btnAddToGrid">[+] Thêm vào lưới</button>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+								<div class="clearfix"></div>								
+								
+							</div>
+						</div>						
+						<div class="clearfix"></div>
+						
+						<hr style="margin: 5px 0 10px 0;">
+						<div class="col-md-6 m-t-10 p-l-0 text-error">
+							<ins class="text-error">Cấu trúc bảng kê</ins>
+						</div>
+						<div class="col-md-6 p-r-0">
+							<div class="row">
+								<button type="button" id="btnDelFromGrid" class="btn btn-primary btn-sm m-r-5 float-right" data-style="slide-left"  >[-] Xóa</button>
+							</div>
+						</div>
+						<div class="clearfix"></div>								
+						<div class="col-sm-12 m-t-10 m-l-0 m-r-0 p-l-0 p-r-0">
+							<div class="form-group row">
+								<div id="grid" ></div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<script th:src="@{/static/function/dm/columnMappingCRUD.js(v=${deployVesionJS}) }"></script>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<button type="button" id="btnDlgAccept" class="btn btn-primary btn-sm " data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+	<button type="button" id="btDlgClose" class="btn btn-primary btn-sm " data-dismiss="modal"><i class="fa fa-power-off mR-5"></i> Đóng</button>					
+</div>
+
+</html>

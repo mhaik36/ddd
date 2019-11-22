@@ -1,0 +1,266 @@
+	<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="modal-header">
+	<h4 class="modal-title text-uppercase fw-700" id="dlg_title" th:text="${_header}"></h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-sm-12">
+			<div style="height: 20px;"></div>
+			<div class="col-xs-11 margin-top-only margin-bottom-only center-block">
+				<form id="fDMTransferFeeCRUD" name="fDMTransferFeeCRUD" method="post" enctype="multipart/form-data" >
+					<div class="row text-error" th:if="${messageError != null}">
+						[[${messageError}]]<hr class="m-t-5 m-b-5">
+					</div>
+					<div class="row" >
+						<div class="margin-top-only margin-bottom-only center-block">
+							<div class="row " th:classappend="${messageError != null? 'none-pointer-event': ''}" >	
+							<div class="col-sm-12 no-padd">
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Mã<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${code}" class="form-control" readonly id="code" name="code" maxlength="50" >
+										</div>
+									</div>
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Mô tả<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${desc_code}" readonly  class="form-control" id="desc_code" name="desc_code" maxlength="100" >
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Ngày hiệu lực<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<div class="input-group date">
+											    <input type="text"  th:value="${activedate}"  id="activedate" maxlength="10" name="activedate" class="form-control form-control-sm" >
+											    <div class="input-group-append input-group-addon icon-date">
+											      <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+											    </div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Loại tiền GD<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="currency" id="currency" disabled class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${CURRENCY != null}">
+				                         			<option th:each="entry : ${CURRENCY.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${currency}"> </option>
+				                         		</th:block>
+											</select>
+										</div>
+									</div>
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Đối tượng KH<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="customergroup" id="customergroup" disabled class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${CUSTOMER_GROUP != null}">
+				                         			<option th:each="entry : ${CUSTOMER_GROUP.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${customergroup}"> </option>
+				                         		</th:block>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Kênh<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="channel_id" id="channel_id" disabled class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${CHANNEL != null}">
+				                         			<option th:each="entry : ${CHANNEL.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${channel_id}"> </option>
+				                         		</th:block>
+											</select>
+										</div>
+									</div>
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Địa bàn<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="locationtype" id="locationtype" disabled class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${LOCATION_TYPE != null}">
+				                         			<option th:each="entry : ${LOCATION_TYPE.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${locationtype}"> </option>
+				                         		</th:block>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Giao dịch có phí</label>
+										<div class="col-md-8">
+											<div class="col-md-6 no-padd">
+												<input type="radio" id="yesFee" value="1" name="apply_tf_fee" th:checked="${apply_tf_fee == '1'}">
+	                        					<label for="yesFee"> Có phí </label>
+                        					</div>
+                        					<div class="col-md-6">
+	                        					<input type="radio" id="noFee" value="0" name="apply_tf_fee" th:checked="${apply_tf_fee == '0'}" >
+	                        					<label for="noFee"> Miễn phí </label>
+                        					</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<hr class="m-t-5 m-b-5">
+								</div>
+								<div class="col-sm-12 text-primary" style="font-weight: bold;">
+									<ins>Mức phí</ins>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-12">
+										<div class="col-md-4">
+											<input type="radio" id="fixedFeeCheck" value="1" name="transfer_fee_type" th:checked="${transfer_fee_type == '1'}" >
+                        					<label for="fixedFeeCheck"> Cố định mức phí với số tiền (món) </label>
+										</div>
+										<div class="col-md-4">
+											<input type="text" th:value="${fixedFeeValue}" class="form-control text-right" maxlength="18" th:readonly="${transfer_fee_type == '0'}" id="fixedFeeValue" name="fixedFeeValue" >
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-12">
+										<div class="col-md-4">
+											<input type="radio" id="percentFeeCheck" value="0" name="transfer_fee_type" th:checked="${transfer_fee_type == '0'}" >
+                        					<label for="percentFeeCheck"> Tỉ lệ % theo số tiền giao dịch </label>
+										</div>
+										<div class="col-md-4">
+											<input type="text" th:value="${percentFeeValue}" th:readonly="${transfer_fee_type == '1'}" maxlength="18"  class="form-control text-right" id="percentFeeValue" name="percentFeeValue">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Tối thiểu (Bảng kê)</label>
+										<div class="col-md-8">
+											<input type="text" th:value="${transfer_fee_min}" class="form-control text-right" id="transfer_fee_min"  name="transfer_fee_min" maxlength="18" >
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<label class="col-md-4 col-form-label control-label">Tối đa (Bảng kê)</label>
+										<div class="col-md-8">
+											<input type="text" th:value="${transfer_fee_max}" class="form-control text-right" id="transfer_fee_max" name="transfer_fee_max" maxlength="18" >
+										</div>
+									</div>
+								</div>
+							</div>			
+								
+							<div class="clearfix"></div>
+							
+						</div>
+					</div>
+					<input type="hidden" name="id" th:value="${id}" >
+				</form>
+				
+			</div>
+			<div style="height: 20px;"></div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" id="btnDlgAccept" class="btn btn-success btn-sm " data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+	<button type="button" id="btnDlgAcceptApply" class="btn btn-success btn-sm " data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept_apply}]]</button>
+	<button type="button" id="btDlgCloseFirst" class="btn btn-primary btn-sm " data-dismiss="modal"><i class="fa fa-power-off mR-5"></i> Đóng</button>					
+</div>
+<script th:src="@{/static/function/dm/transferFeeCRUD.js(v=${deployVesionJS}) }"></script>
+<script type="text/javascript">
+$(function(){
+	$('div.modal-footer').find("#btnDlgAccept, #btnDlgAcceptApply").click(function (event) {
+		event.preventDefault();event.stopPropagation();
+		var vId = $(this).attr('id');
+		var _obj = this;
+		$(_obj).prop('disabled', true);
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=checkDataToSave',
+			data: getDataToSave(vId),
+			beforeSend: function(req) {
+				initAjaxJsonRequest(req);
+	        	showLoading();
+			},
+			success:function(res) {
+				$(_obj).prop('disabled', false);
+				hideLoading();
+				if(res) {
+					if(res.errorCode == 0) {
+						alertConfirm(res.responseData,
+							function(e){
+								$.ajax({
+									type: "POST",
+									datatype: "json",
+									url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=saveData',
+									data: getDataToSave(vId),
+									beforeSend: function(req) {
+										initAjaxJsonRequest(req);
+							        	showLoading();
+									},
+									success:function(res) {
+										hideLoading();
+										if(res) {
+											if(res.errorCode == 0) {
+												$(_obj).prop('disabled', true);
+												alertDLSuccess(createObjectError(res).html(), function(){
+													if($('#fTransferFee').find('#grid').length > 0)
+														refreshSearch();
+													$('#fDMTransferFeeCRUD').closest("div.modal").modal("hide");
+													$('#fDMTransferFeeCRUD').closest("div.modal").find('.modal-content').empty();
+												});
+												disabledAllControlsInForm('fDMTransferFeeCRUD');
+												
+											}else{
+												alertDLSuccess(createObjectError(res).html());
+											}
+										}else{
+											alertDLSuccess('unknown error!!!');
+											hideLoading();
+										}
+									},
+									error:function (xhr, ajaxOptions, thrownError){
+										alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+							            hideLoading();
+							        }
+								});
+							},
+							function(e){}
+							);
+								
+					}else{
+						alertDLSuccess(createObjectError(res).html());
+					}
+				}else{
+					alertDLSuccess('unknown error!!!');
+					hideLoading();
+				}
+			},
+			error:function (xhr, ajaxOptions, thrownError){
+				$(_obj).prop('disabled', false);
+				alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+	            hideLoading();
+	        }
+		});
+	});
+	
+});
+</script>
+
+</html>

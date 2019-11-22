@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="pageheader">
+	<div class="media">
+		<div class="pageicon pull-left" style="padding-top: 5px;"><i class="fa fa-ticket"></i></div>
+		<ul class="breadcrumb">
+			<li><a th:href="@{/Main}"><i class="glyphicon glyphicon-home"></i></a></li>
+		</ul>
+		<h4 lang="lang_Vi" class="text-uppercase" th:text="${_header}"></h4>
+	</div><!-- media -->
+</div><!-- pageheader -->
+<div class="contentpanel">
+	<div class="container">
+		<form id="fDMBanksByKeywordCRUD" name="fDMBanksByKeywordCRUD" method="post" enctype="multipart/form-data" >
+			<div class="col-sm-12 text-error" th:if="${messageError != null}">
+				[[${messageError}]]<hr class="m-t-5 m-b-5">
+			</div>
+			<div class="row" >
+				<div class="col-sm-6 margin-top-only margin-bottom-only center-block">
+					<div class="row " th:classappend="${messageError != null? 'none-pointer-event': ''}" >
+						<div class="col-sm-12">
+							<div class="form-group row">
+								<label class="col-md-4 col-form-label control-label">Ngân hàng gốc<span class="text-error">&nbsp;*</span></label>
+								<div class="col-md-8">
+									<input type="text" th:value="${bankNameV}" class="form-control" id="bankNameV" name="bankNameV" maxlength="200" readonly="readonly" >
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group row">
+								<label class="col-md-4 col-form-label control-label">Kênh thanh toán<span class="text-error">&nbsp;*</span></label>
+								<div class="col-md-8">
+									<select name="channel" id="channel" class="form-control">
+								 		<option value=""></option>
+								 		<th:block th:if="${MAP_CHANNEL != null}">
+		                         			<option th:each="entry : ${MAP_CHANNEL.entrySet()}"
+		                         					th:value="${entry.key}" th:utext="${entry.value}"
+		                         					th:selected="${entry.key} == ${channel}"
+		                         					> </option>
+		                         		</th:block>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group row">
+								<label class="col-md-4 col-form-label control-label">Tỉnh/Thành phố<span class="text-error">&nbsp;*</span></label>
+								<div class="col-md-8">
+									<select name="prCode" id="prCode" class="form-control">
+								 		<option value=""></option>
+								 		<th:block th:if="${MAP_PR_CODES != null}">
+		                         			<option th:each="entry : ${MAP_PR_CODES.entrySet()}"
+		                         					th:value="${entry.key}" th:utext="${entry.value}"
+		                         					th:selected="${entry.key} == ${prCode}"
+		                         					> </option>
+		                         		</th:block>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group row">
+								<label class="col-md-4 col-form-label control-label">Nhóm ngân hàng<span class="text-error">&nbsp;*</span></label>
+								<div class="col-md-8">
+									<select name="generalbank" id="generalbank" class="form-control">
+								 		<option value=""></option>
+								 		<th:block th:if="${MAP_GENERALBANK != null}">
+		                         			<option th:each="entry : ${MAP_GENERALBANK.entrySet()}"
+		                         					th:value="${entry.key}" th:utext="${entry.value}"
+		                         					th:selected="${generalbank == entry.key}"> </option>
+		                         		</th:block>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+						
+						<div class="col-sm-12">
+							<div class="form-group row">
+								<label class="col-md-4 col-form-label control-label">Ngân hàng<span class="text-error">&nbsp;*</span></label>
+								<div class="col-md-8">
+									<select name="bank" id="bank" class="form-control">
+								 		<option value=""></option>
+								 		<th:block th:if="${MAP_BANKS != null}">
+		                         			<option th:each="entry : ${MAP_BANKS.entrySet()}"
+		                         					th:value="${entry.key}" th:utext="${entry.value}"
+		                         					th:selected="${generalbank == entry.key}"> </option>
+		                         		</th:block>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<div class="form-group row">
+								<label class="col-md-4 col-form-label control-label">Ngân hàng trung gian<span class="text-error">&nbsp;*</span></label>
+								<div class="col-md-8">
+									<select name="bankIntermediate" id="bankIntermediate" class="form-control">
+								 		<option value=""></option>
+								 		<th:block th:if="${MAP_BANK_INTERMEDIATE != null}">
+		                         			<option th:each="entry : ${MAP_BANK_INTERMEDIATE.entrySet()}"
+		                         					th:value="${entry.key}" th:utext="${entry.value}"
+		                         					th:selected="${generalbank == entry.key}"> </option>
+		                         		</th:block>
+									</select>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="clearfix"></div>
+					<hr style="margin: 0 0 10px 0;">
+					<div class="form-row">
+						<div class="col-md-12 mT-15 p-l-0 p-r-0">
+							<button type="button" id="btBack" class="btn btn-sm float-left" data-style="slide-left"><i class="fa fa-chevron-left mR-5"></i> Quay lại</button>
+							<button type="button" id="btAccept" class="btn btn-primary btn-sm ladda-button float-right" data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<script th:src="@{/static/function/dm/banksByKeywordCRUD.js(v=${deployVesionJS}) }"></script>
+	</div>
+</div>
+
+
+</html>

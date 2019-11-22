@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorator="template/layout/layout-main.html">
+
+<body>
+	<div class="mainpanel" layout:fragment="content">
+		<div class="pageheader">
+			<div class="media">
+				<div class="pageicon pull-left" style="padding-top: 5px;"><i class="fa fa-ticket"></i></div>
+				<ul class="breadcrumb">
+					<li><a th:href="@{/Main}"><i class="glyphicon glyphicon-home"></i></a></li>
+				</ul>
+				<h4 lang="lang_Vi" class="text-uppercase" >Danh mục Ngân hàng/Kênh thanh toán theo keyword</h4>
+			</div><!-- media -->
+		</div><!-- pageheader -->
+		
+		<div class="contentpanel">
+			<div class="container">
+				<form id="fDMBanksByKeyword" name="fDMBanksByKeyword" method="post" enctype="multipart/form-data" >
+					<div class="row">
+						<div class="col-xs-12 margin-top-only margin-bottom-only center-block">
+							<div class="row">
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Ngân hàng gốc</label>
+									<div class="col-md-8">
+										<input type="text" class="form-control" id="originalBankID" name="originalBankID" maxlength="100" >
+									</div>
+								</div>
+
+							</div>
+							
+							<div class="row">
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Mã NH sau chuyển đổi</label>
+									<div class="col-md-8">
+										<input type="text" class="form-control" id="destBankId" name="destBankId" maxlength="12" >
+									</div>
+								</div>
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Tên NH sau chuyển đổi</label>
+									<div class="col-md-8">
+										<input type="text" class="form-control" id="destBankName" name="destBankName" maxlength="200" >
+									</div>
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Mã chi nhánh</label>
+									<div class="col-md-8">
+										<input type="text" class="form-control" id="branchCode" name="branchCode" maxlength="20" >
+									</div>
+								</div>
+								<div class="form-group col-md-5">
+									<label class="col-md-4 col-form-label control-label">Nhóm ngân hàng</label>
+									<div class="col-md-8">
+										<select name="generalbank" id="generalbank" class="form-control">
+									 		<option value=""></option>
+									 		<th:block th:if="${MAP_LOCATIONS != null}">
+			                         			<option th:each="entry : ${MAP_LOCATIONS.entrySet()}"
+			                         					th:value="${entry.key}" th:utext="${entry.value}"
+			                         					th:selected="${generalbank == entry.key}"> </option>
+                         					</th:block>
+										</select>
+									</div>
+								</div>
+								<div class="form-group col-md-2">
+				    				<div style="margin: 0px 10px">
+				    					<button type="button" id="btSearch" class="btn btn-primary btn-xs " ><i class="fa fa-search" ></i> Tìm kiếm</button>
+				    				</div>
+								</div>
+
+							</div>
+							<hr style="margin: 0 0 10px 0;">
+							<div class="row">
+								<div class="col-md-12 form-group btnFunction">
+									<button type="button" data-action="exportExcel" class="btn btn-inline btn-sm btn-primary" id="btnExportExcel"><i class="fa fa-file-excel-o"> </i> Xuất Excel</button>
+									<button type="button" data-action="edit" class="btn btn-inline btn-sm btn-primary" id="btnEdit"><em class="fa fa-pencil-square-o"> </em> Thay đổi</button>
+								</div>
+								<div class="clearfix"></div>
+								<hr style="margin: 0 0 10px 0;">
+								<div class="">
+									<div id="grid" ></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form> 
+				<script type="text/javascript">
+					var _gridMain = $('#fDMBanksByKeyword').find('#grid');
+				</script>
+				<script th:src="@{/static/function/dm/banksByKeyword.js(v=${deployVesionJS}) }"></script>
+			</div>
+		</div><!-- contentpanel -->
+	</div>
+</body>
+	
+</html>

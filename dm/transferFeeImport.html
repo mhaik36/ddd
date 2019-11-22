@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="modal-header">
+	<h4 class="modal-title text-uppercase fw-700" id="dlg_title" th:text="${_header}"></h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="col-xs-11 margin-top-only margin-bottom-only center-block">
+				<form id="fDMtransferFeeImport" name="fDMtransferFeeImport" method="post" enctype="multipart/form-data" >
+					<div class="row" >
+						<div class="margin-top-only margin-bottom-only center-block">
+							<div class="row " >
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-xs-3 col-md-2 col-form-label control-label">Tên tập tin</label>
+										<div class="col-xs-4 col-md-3">
+											<div class="form-file m-t-xs">
+												<input type="file" name="fileExcel" id="fileExcel" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+												<button class="btn btn-xs btn-block fw-700">Chọn tập tin ...</button>
+						        			</div>
+										</div>
+										<div class="col-xs-5 col-md-7">
+											<input type="text" class="form-control" id="fileName" name="fileName" maxlength="50" readonly="readonly" >
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-2 col-form-label control-label">Ngày hiệu lực<span class="text-error" >&nbsp;*</span></label>
+										<div class="col-xs-4 col-md-3">
+											<div class="input-group date">
+											    <input type="text" id="activeDate" name="activeDate" class="form-control form-control-sm" th:value="${activeDate}" >
+											    <div class="input-group-append input-group-addon icon-date">
+											      <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+											    </div>
+											</div>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								
+								<hr style="margin: 5px 0 10px 0;">								
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<div id="grid" ></div>
+									</div>
+								</div>
+								
+								<div class="row col-sm-12" >
+									<hr style="margin: 5px 0 10px 0;">
+									<div class="form-row">
+										<div class="col-md-12 mT-15 p-l-0 p-r-0">
+											<button type="button" id="btBack" class="btn btn-sm ladda-button float-left" data-style="slide-left"><i class="fa fa-chevron-left mR-5"></i> Quay lại</button>
+											
+											<button type="button" id="btAcceptApply" class="btn btn-warning btn-sm btn-sm m-r-5 float-right" data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept_apply}]]</button>
+											<button type="button" id="btAccept" class="btn btn-primary btn-sm btn-sm m-r-5 float-right" data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script th:src="@{/static/function/dm/transferFeeImport.js(v=${deployVesionJS}) }"></script>
+
+</html>

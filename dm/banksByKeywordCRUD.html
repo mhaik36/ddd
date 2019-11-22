@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="modal-header">
+	<h4 class="modal-title text-uppercase fw-700" id="dlg_title" th:text="${_header}"></h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-sm-12">
+			<div style="height: 20px;"></div>
+			<div class="col-xs-11 margin-top-only margin-bottom-only center-block">
+				<form id="fDMBanksByKeywordCRUD" name="fDMBanksByKeywordCRUD" method="post" enctype="multipart/form-data" >
+					<div class="row text-error" th:if="${messageError != null}">
+						[[${messageError}]]<hr class="m-t-5 m-b-5">
+					</div>
+					<div class="row" >
+						<div class="margin-top-only margin-bottom-only center-block">
+							<div class="row " th:classappend="${messageError != null? 'none-pointer-event': ''}" >
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Ngân hàng gốc</label>
+										<div class="col-md-8">
+											<input type="text" th:value="${originb2Name}" class="form-control" id="originb2Name" name="originb2Name" maxlength="200" readonly="readonly" >
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Kênh thanh toán<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="channel" id="channel" class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${MAP_CHANNEL != null}">
+				                         			<option th:each="entry : ${MAP_CHANNEL.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${channel}"
+				                         					> </option>
+				                         		</th:block>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Địa bàn<span class="text-error">&nbsp;*</span></label>
+<!-- 										<div class="col-md-8">
+											<select name="prCode" id="prCode" class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${MAP_PR_CODES != null}">
+				                         			<option th:each="entry : ${MAP_PR_CODES.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${entry.key} == ${prCode}"
+				                         					> </option>
+				                         		</th:block>
+											</select>
+										</div> -->
+										<div class="col-xs-8">
+											 <div class="w-100-p">
+												<select id="prCode" name="prCode" class="form-control form-control-sm select2">
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Nhóm ngân hàng<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<select name="generalbank" id="generalbank" class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${MAP_GENERALBANK != null}">
+				                         			<option th:each="entry : ${MAP_GENERALBANK.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${generalbank == entry.key}"> </option>
+				                         		</th:block>
+											</select>
+										</div>
+									</div>
+								</div>
+								
+								
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Ngân hàng<span class="text-error">&nbsp;*</span></label>
+<!-- 										<div class="col-md-8">
+											<select name="bank" id="bank" class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${MAP_BANKS != null}">
+				                         			<option th:each="entry : ${MAP_BANKS.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${bank == entry.key}"> </option>
+				                         		</th:block>
+											</select>
+										</div> -->
+										<div class="col-xs-8">
+											 <div class="w-100-p">
+												<select id="bank" name="bank" class="form-control form-control-sm select2">
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+<!-- 								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Ngân hàng trung gian</label>
+										<div class="col-md-8">
+											<select name="bankIntermediate" id="bankIntermediate" class="form-control">
+										 		<option value=""></option>
+										 		<th:block th:if="${MAP_BANK_INTERMEDIATE != null}">
+				                         			<option th:each="entry : ${MAP_BANK_INTERMEDIATE.entrySet()}"
+				                         					th:value="${entry.key}" th:utext="${entry.value}"
+				                         					th:selected="${bankIntermediate == entry.key}"> </option>
+				                         		</th:block>
+											</select>
+										</div>
+									</div>
+								</div> -->
+								
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+					
+					<input type="hidden" name="originb2Id" th:value="${originb2Id}"  >
+				</form>
+			</div>
+			<div style="height: 20px;"></div>
+		</div>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<button type="button" id="btnDlgAccept" class="btn btn-primary btn-sm " data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+	<button type="button" id="btDlgClose" class="btn btn-primary btn-sm " data-dismiss="modal"><i class="fa fa-power-off mR-5"></i> Đóng</button>					
+</div>
+<script type="text/javascript">
+var parser = new DOMParser;
+var dom = parser.parseFromString('<!doctype html><body>' + '[[${loc_desc}]]', 'text/html');
+var decodedString = dom.body.textContent;
+var jsonInitProvince = [{'id': '[[${loc}]]', 'par_code':'[[${loc}]]', 'par_name': decodedString}];
+
+dom = parser.parseFromString('<!doctype html><body>' + '[[${bankName}]]', 'text/html');
+decodedString = dom.body.textContent;
+var jsonInitBank = [{'id': '[[${bank}]]', 'par_code':'[[${bank}]]', 'par_name': decodedString}];
+var objGeneralBank = {};
+$('#generalbank option').each(function () {
+	if ($(this).val() != '') {
+		objGeneralBank[$(this).val()] = $(this).text();
+	}
+});
+</script>
+<script th:src="@{/static/function/dm/banksByKeywordCRUD.js(v=${deployVesionJS}) }"></script>
+<script type="text/javascript">
+$(function(){
+	$('div.modal-footer').find("#btnDlgAccept").click(function (event) {
+		event.preventDefault();event.stopPropagation();
+		
+		var _obj = this;
+		$(_obj).prop('disabled', true);
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=checkDataToSave',
+			data: getDataToSave(),
+			beforeSend: function(req) {
+				initAjaxJsonRequest(req);
+	        	showLoading();
+			},
+			success:function(res) {
+				$(_obj).prop('disabled', false);
+				hideLoading();
+				if(res) {
+					if(res.errorCode == 0) {
+						alertConfirm(res.responseData,
+							function(e){
+								$.ajax({
+									type: "POST",
+									datatype: "json",
+									url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=saveData',
+									data: getDataToSave(),
+									beforeSend: function(req) {
+										initAjaxJsonRequest(req);
+							        	showLoading();
+									},
+									success:function(res) {
+										hideLoading();
+										if(res) {
+											if(res.errorCode == 0) {
+												$(_obj).prop('disabled', true);
+												alertDLSuccess(createObjectError(res).html(), function(){
+// 													$("#fDMBanksByKeywordCRUD").find('#btBack').trigger('click');
+													if($('#fDMBanksByKeyword').find('#grid').length > 0)
+														refreshSearch();
+													$('#fDMBanksByKeywordCRUD').closest("div.modal").modal("hide");
+													$('#fDMBanksByKeywordCRUD').closest("div.modal").find('.modal-content').empty();
+												});
+												disabledAllControlsInForm('fDMBanksByKeywordCRUD');
+												
+											}else{
+												alertDLSuccess(createObjectError(res).html());
+											}
+										}else{
+											alertDLSuccess('unknown error!!!');
+											hideLoading();
+										}
+									},
+									error:function (xhr, ajaxOptions, thrownError){
+										alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+							            hideLoading();
+							        }
+								});
+							},
+							function(e){}
+							);
+								
+					}else{
+						alertDLSuccess(createObjectError(res).html());
+					}
+				}else{
+					alertDLSuccess('unknown error!!!');
+					hideLoading();
+				}
+			},
+			error:function (xhr, ajaxOptions, thrownError){
+				$(_obj).prop('disabled', false);
+				alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+	            hideLoading();
+	        }
+		});
+	});
+	
+});
+</script>
+
+
+</html>

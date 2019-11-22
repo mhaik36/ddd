@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="modal-header">
+	<h4 class="modal-title text-uppercase fw-700" id="dlg_title" th:text="${_header}"></h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-sm-12">
+			<div style="height: 20px;"></div>
+			<div class="col-xs-11 margin-top-only margin-bottom-only center-block">
+				<form id="fDMGlBranchCRUD" name="fDMGlBranchCRUD" method="post" enctype="multipart/form-data" >
+					<div class="row text-error" th:if="${messageError != null}">
+						[[${messageError}]]<hr class="m-t-5 m-b-5">
+					</div>
+					<div class="row" >
+						<div class="margin-top-only margin-bottom-only center-block">
+							<div class="row "
+								th:classappend="${messageError != null? 'none-pointer-event': ''}">
+								<div th:if="${id != null}" class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Id</label>
+										<div class="col-md-8">
+											<input readonly="readonly" type="text" th:value="${id}"
+												class="form-control" id="id" name="id" maxlength="50">
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Số tài khoản<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input th:readonly="${gl != null}" type="text" th:value="${gl}"
+												class="form-control" id="gl" name="gl" maxlength="100">
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Tên tài khoản<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${name}"
+												class="form-control" id="name"
+												name="name" maxlength="200">
+										</div>
+									</div>
+								</div>
+<!-- 								<div class="col-sm-12"> -->
+<!-- 									<div class="form-group row"> -->
+<!-- 										<label class="col-md-4 col-form-label control-label">Chi nhánh</label> -->
+<!-- 										<div class="col-md-8"> -->
+<!-- 											<input type="text" th:value="${branchId}" -->
+<!-- 												th:readonly="${branchId != null}" class="form-control" -->
+<!-- 												id="branchId" name="branchId" maxlength="50"> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+								<input type="hidden" th:value="${id}"
+												class="form-control"
+												id="id" name="id" maxlength="50">
+							</div>											
+							<div class="clearfix"></div>
+						</div>
+					</div>
+					
+				</form>
+				
+			</div>
+			<div style="height: 20px;"></div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" id="btnDlgAccept" class="btn btn-primary btn-sm " data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+	<button type="button" id="btDlgClose" class="btn btn-primary btn-sm " data-dismiss="modal"><i class="fa fa-power-off mR-5"></i> Đóng</button>					
+</div>
+<script type="text/javascript" th:unless="${isInput }">
+disabledAllControlsInForm('fDMGlBranchCRUD');
+</script>
+<script th:src="@{/static/function/dm/glBranchCRUD.js(v=${deployVesionJS}) }"></script>
+<script type="text/javascript">
+$(function(){
+	$('div.modal-footer').find("#btnDlgAccept").click(function (event) {
+		event.preventDefault();event.stopPropagation();
+		
+		var _obj = this;
+		$(_obj).prop('disabled', true);
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=checkDataToSave',
+			data: getDataToSave(),
+			beforeSend: function(req) {
+				initAjaxJsonRequest(req);
+	        	showLoading();
+			},
+			success:function(res) {
+				$(_obj).prop('disabled', false);
+				hideLoading();
+				if(res) {
+					if(res.errorCode == 0) {
+						alertConfirm(res.responseData,
+							function(e){
+								$.ajax({
+									type: "POST",
+									datatype: "json",
+									url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=saveData',
+									data: getDataToSave(),
+									beforeSend: function(req) {
+										initAjaxJsonRequest(req);
+							        	showLoading();
+									},
+									success:function(res) {
+										hideLoading();
+										if(res) {
+											if(res.errorCode == 0) {
+												$(_obj).prop('disabled', true);
+												alertDLSuccess(createObjectError(res).html(), function(){
+													if($('#fGlBranch').find('#grid').length > 0)
+														refreshSearch();
+													$('#fDMGlBranchCRUD').closest("div.modal").modal("hide");
+													$('#fDMGlBranchCRUD').closest("div.modal").find('.modal-content').empty();
+												});
+												disabledAllControlsInForm('fDMGlBranchCRUD');
+												
+											}else{
+												alertDLSuccess(createObjectError(res).html());
+											}
+										}else{
+											alertDLSuccess('unknown error!!!');
+											hideLoading();
+										}
+									},
+									error:function (xhr, ajaxOptions, thrownError){
+										alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+							            hideLoading();
+							        }
+								});
+							},
+							function(e){}
+							);
+								
+					}else{
+						alertDLSuccess(createObjectError(res).html());
+					}
+				}else{
+					alertDLSuccess('unknown error!!!');
+					hideLoading();
+				}
+			},
+			error:function (xhr, ajaxOptions, thrownError){
+				$(_obj).prop('disabled', false);
+				alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+	            hideLoading();
+	        }
+		});
+	});
+	
+});
+</script>
+
+</html>

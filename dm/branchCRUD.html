@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+	
+<div class="modal-header">
+	<h4 class="modal-title text-uppercase fw-700" id="dlg_title" th:text="${_header}"></h4>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-sm-12">
+			<div style="height: 20px;"></div>
+			<div class="col-xs-11 margin-top-only margin-bottom-only center-block">
+				<form id="fDMBranchCRUD" name="fDMBranchCRUD" method="post" enctype="multipart/form-data" >
+					<div class="row text-error" th:if="${messageError != null}">
+						[[${messageError}]]<hr class="m-t-5 m-b-5">
+					</div>
+					<div class="row" >
+						<div class="margin-top-only margin-bottom-only center-block">
+							<div class="row "
+								th:classappend="${messageError != null? 'none-pointer-event': ''}">
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Mã chi nhánh<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${bankId}"
+												th:readonly="${bankId != null}" class="form-control"
+												id="bankId" name="bankId" maxlength="50">
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Tên chi nhánh<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${bankNameV}"
+												th:readonly="${bankNameV != null}" class="form-control"
+												id="bankNameV" name="bankNameV" maxlength="255">
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Mã CN cha<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${parent}"  class="form-control"
+												id="parent" name="parent" maxlength="50">
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Mã tỉnh thành<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${prCode}"
+												th:readonly="${prCode != null}" class="form-control"
+												id="prCode" name="prCode" maxlength="50">
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Tên tỉnh thành<span class="text-error">&nbsp;*</span></label>
+										<div class="col-md-8">
+											<input type="text" th:value="${prCodeDesc}"
+												th:readonly="true" class="form-control"
+												id="prCodeDesc" name="prCodeDesc" maxlength="255">
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Thư mục xuất</label>
+										<div class="col-md-8">
+											<input type="text" th:value="${exportFolder}" class="form-control"
+												id="exportFolder" name="exportFolder" maxlength="255">
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group row">
+										<label class="col-md-4 col-form-label control-label">Tên tệp xuất</label>
+										<div class="col-md-8">
+											<input type="text" th:value="${exportFileName}" class="form-control"
+												id="exportFileName" name="exportFileName" maxlength="255">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+							
+						</div>
+					</div>
+				</form>
+				
+			</div>
+			<div style="height: 20px;"></div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" id="btnDlgAccept" class="btn btn-primary btn-sm " data-style="slide-left" th:if="${null == messageError}" ><i class="fa fa-check mR-5" ></i> [[${_label_accept}]]</button>
+	<button type="button" id="btDlgClose" class="btn btn-primary btn-sm " data-dismiss="modal"><i class="fa fa-power-off mR-5"></i> Đóng</button>					
+</div>
+<script th:src="@{/static/function/dm/branchCRUD.js(v=${deployVesionJS}) }"></script>
+<script type="text/javascript">
+$(function(){
+	$('div.modal-footer').find("#btnDlgAccept").click(function (event) {
+		event.preventDefault();event.stopPropagation();
+		
+		var _obj = this;
+		$(_obj).prop('disabled', true);
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=checkDataToSave',
+			data: getDataToSave(),
+			beforeSend: function(req) {
+				initAjaxJsonRequest(req);
+	        	showLoading();
+			},
+			success:function(res) {
+				$(_obj).prop('disabled', false);
+				hideLoading();
+				if(res) {
+					if(res.errorCode == 0) {
+						alertConfirm(res.responseData,
+							function(e){
+								$.ajax({
+									type: "POST",
+									datatype: "json",
+									url: ROOT_PATH + '/Main?transaction=[[${transaction}]]&method=saveData',
+									data: getDataToSave(),
+									beforeSend: function(req) {
+										initAjaxJsonRequest(req);
+							        	showLoading();
+									},
+									success:function(res) {
+										hideLoading();
+										if(res) {
+											if(res.errorCode == 0) {
+												$(_obj).prop('disabled', true);
+												alertDLSuccess(createObjectError(res).html(), function(){
+													if($('#fBranch').find('#grid').length > 0)
+														refreshSearch();
+													$('#fDMBranchCRUD').closest("div.modal").modal("hide");
+													$('#fDMBranchCRUD').closest("div.modal").find('.modal-content').empty();
+												});
+												disabledAllControlsInForm('fDMBranchCRUD');
+												
+											}else{
+												alertDLSuccess(createObjectError(res).html());
+											}
+										}else{
+											alertDLSuccess('unknown error!!!');
+											hideLoading();
+										}
+									},
+									error:function (xhr, ajaxOptions, thrownError){
+										alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+							            hideLoading();
+							        }
+								});
+							},
+							function(e){}
+							);
+								
+					}else{
+						alertDLSuccess(createObjectError(res).html());
+					}
+				}else{
+					alertDLSuccess('unknown error!!!');
+					hideLoading();
+				}
+			},
+			error:function (xhr, ajaxOptions, thrownError){
+				$(_obj).prop('disabled', false);
+				alertDLSuccess(xhr.status + " - " + xhr.responseText, function(){});
+	            hideLoading();
+	        }
+		});
+	});
+	
+});
+</script>
+
+</html>
